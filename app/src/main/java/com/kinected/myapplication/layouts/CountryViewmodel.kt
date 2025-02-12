@@ -1,6 +1,7 @@
 package com.kinected.myapplication.layouts
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.WorkManager
 import com.kinected.myapplication.common.WorkerUtil
@@ -8,6 +9,7 @@ import com.kinected.myapplication.data.CountryRepo
 import com.kinected.myapplication.data.CountryResponseItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,6 +22,10 @@ class CountryViewmodel @Inject constructor(
 
     init {
         startWorker()
+
+        viewModelScope.launch {
+            countryRepo.fetchCountryList()
+        }
     }
 
     private fun startWorker(){

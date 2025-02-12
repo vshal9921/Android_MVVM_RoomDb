@@ -42,6 +42,7 @@ object WorkerUtil{
             .build()
 
         return PeriodicWorkRequestBuilder<ApiWorker>(15, TimeUnit.MINUTES)
+            .setInitialDelay(15, TimeUnit.MINUTES)
             .setConstraints(constraints = constraints)
             .build()
     }
