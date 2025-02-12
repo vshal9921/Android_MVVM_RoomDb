@@ -23,6 +23,11 @@ android {
     }
 
     buildTypes {
+
+        debug {
+            isDebuggable = true
+        }
+
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -80,8 +85,9 @@ dependencies {
 
     // hilt
     implementation(libs.hilt.android)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
     ksp(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.work)
+    ksp(libs.androidx.hilt.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

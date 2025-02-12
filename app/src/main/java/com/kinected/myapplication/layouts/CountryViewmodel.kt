@@ -2,6 +2,8 @@ package com.kinected.myapplication.layouts
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkManager
+import com.kinected.myapplication.common.WorkerUtil
 import com.kinected.myapplication.data.CountryRepo
 import com.kinected.myapplication.data.CountryResponseItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,8 +19,10 @@ class CountryViewmodel @Inject constructor(
     val countryList :StateFlow<List<CountryResponseItem>> = countryRepo.countryList
 
     init {
-        viewModelScope.launch {
+
+
+        /*viewModelScope.launch {
             countryRepo.fetchCountryList()
-        }
+        }*/
     }
 }

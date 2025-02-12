@@ -14,6 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.work.WorkManager
+import com.kinected.myapplication.common.WorkerUtil
 import com.kinected.myapplication.layouts.CountryItem
 import com.kinected.myapplication.layouts.CountryViewmodel
 import com.kinected.myapplication.ui.theme.MyApplicationTheme
@@ -39,6 +41,10 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        val workRequest = WorkerUtil.startPeriodicWorker()
+
+        WorkManager.getInstance(this).enqueue(workRequest)
 
     }
 }

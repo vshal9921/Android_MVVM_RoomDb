@@ -50,7 +50,7 @@ class CountryRepo @Inject constructor(
 
     }
 
-    suspend fun fetchCountryList() {
+    fun fetchCountryList() {
         coroutineScope.launch(Dispatchers.IO) {
             val lastApiCallTime = preferenceRepo.getLastUpdateTime() ?: 0
             val currentTime = System.currentTimeMillis()
