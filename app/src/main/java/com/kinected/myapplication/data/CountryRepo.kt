@@ -28,41 +28,36 @@ class CountryRepo @Inject constructor(
     }
 
     init {
-        startBackgroundApiCall()
+        //startBackgroundApiCall()
     }
 
-    private fun setNewCountryList(newList: List<CountryResponseItem>){
+    private suspend fun setNewCountryList(newList: List<CountryResponseItem>){
 
         _countryList.value = newList
-
-        // save data in local db
-        coroutineScope.launch(Dispatchers.IO){
-
         preferenceRepo.saveLastUpdateTime(System.currentTimeMillis())
 
-            countryDao.deleteAllList()
+        // save data in local db
+
+        countryDao.deleteAllList()
 
         countryList.value.forEach { item ->
-                countryDao.insertCountry(item)
+            countryDao.insertCountry(item)
 
-            }
         }
-
     }
 
-    fun fetchCountryList() {
-        coroutineScope.launch(Dispatchers.IO) {
-            val lastApiCallTime = preferenceRepo.getLastUpdateTime() ?: 0
-            val currentTime = System.currentTimeMillis()
+    suspend fun fetchCountryList() {
 
-            Log.d("Last_time", "qwerty last time = $lastApiCallTime")
-            Log.d("Last_time", "qwerty diff = ${currentTime - lastApiCallTime}")
+        val lastApiCallTime = preferenceRepo.getLastUpdateTime() ?: 0
+        val currentTime = System.currentTimeMillis()
 
-            if (currentTime - lastApiCallTime >= API_CALL_INTERVAL) {
-                getCountryListFromApi()
-            } else {
-                loadFromDatabase()
-            }
+        Log.d("Last_time", "qwerty last time = $lastApiCallTime")
+        Log.d("Last_time", "qwerty diff = ${currentTime - lastApiCallTime}")
+
+        if (currentTime - lastApiCallTime >= API_CALL_INTERVAL) {
+            getCountryListFromApi()
+        } else {
+            loadFromDatabase()
         }
     }
 
@@ -71,30 +66,26 @@ class CountryRepo @Inject constructor(
         _countryList.value = localData
     }
 
-    fun getCountryListFromApi(){
-
-        coroutineScope.launch(Dispatchers.IO) {
-            try {
-                val response = apiService.getCountryList()
-                setNewCountryList(response)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                loadFromDatabase() // Load from local DB in case of failure
-            }
+    private suspend fun getCountryListFromApi(){
+        try {
+            val response = apiService.getCountryList()
+            setNewCountryList(response)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            loadFromDatabase() // Load from local DB in case of failure
         }
     }
 
-    private fun startBackgroundApiCall() {
-        coroutineScope.launch(Dispatchers.IO) {
-            while (true) {
+    private suspend fun startBackgroundApiCall() {
 
-                delay(API_CALL_INTERVAL)
+        while (true) {
 
-                try {
-                    getCountryListFromApi()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+            delay(API_CALL_INTERVAL)
+
+            try {
+                getCountryListFromApi()
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }

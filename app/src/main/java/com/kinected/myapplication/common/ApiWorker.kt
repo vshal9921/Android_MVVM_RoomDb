@@ -3,10 +3,10 @@ package com.kinected.myapplication.common
 import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.Constraints
+import androidx.work.CoroutineWorker
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkRequest
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.kinected.myapplication.data.CountryRepo
 import dagger.assisted.Assisted
@@ -18,19 +18,17 @@ class ApiWorker @AssistedInject constructor(
     private val countryRepo: CountryRepo,
     @Assisted context: Context,
     @Assisted workerParameters: WorkerParameters
-) : Worker(context, workerParameters){
+) : CoroutineWorker(context, workerParameters){
 
-        override fun doWork(): Result {
-
-            return try{
-                countryRepo.fetchCountryList()
-                Result.success()
-            }
-            catch (e: Exception){
-                e.printStackTrace()
-                return Result.failure()
-            }
-
+    override suspend fun doWork(): Result {
+        return try{
+            countryRepo.fetchCountryList()
+            Result.success()
+        }
+        catch (e: Exception){
+            e.printStackTrace()
+            return Result.failure()
+        }
     }
 }
 
