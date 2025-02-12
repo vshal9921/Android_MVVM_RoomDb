@@ -5,6 +5,7 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkRequest
 import androidx.work.WorkerParameters
@@ -34,7 +35,7 @@ class ApiWorker @AssistedInject constructor(
 
 object WorkerUtil{
 
-    fun startPeriodicWorker() : WorkRequest{
+    fun startPeriodicWorker() : PeriodicWorkRequest{
 
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)

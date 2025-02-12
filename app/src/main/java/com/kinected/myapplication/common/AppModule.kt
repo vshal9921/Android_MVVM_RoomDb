@@ -2,6 +2,7 @@ package com.kinected.myapplication.common
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.work.WorkManager
 import com.kinected.myapplication.data.CountryDao
 import com.kinected.myapplication.data.CountryDb
 import com.kinected.myapplication.data.CountryRepo
@@ -75,5 +76,10 @@ class AppModule {
     @Singleton
     fun providePreferenceRepo(sharedPreferences: SharedPreferences): PreferenceRepo {
         return PreferenceRepo(sharedPreferences)
+    }
+
+    @Provides
+    fun provideWorkManager(@ApplicationContext context: Context): WorkManager {
+        return WorkManager.getInstance(context)
     }
 }

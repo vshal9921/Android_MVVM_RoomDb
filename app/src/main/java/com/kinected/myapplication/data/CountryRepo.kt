@@ -3,13 +3,9 @@ package com.kinected.myapplication.data
 import android.util.Log
 import com.kinected.myapplication.common.PreferenceRepo
 import com.kinected.myapplication.network.ApiService
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CountryRepo @Inject constructor(
@@ -21,14 +17,8 @@ class CountryRepo @Inject constructor(
     private val _countryList = MutableStateFlow<List<CountryResponseItem>>(emptyList())
     var countryList : StateFlow<List<CountryResponseItem>> = _countryList.asStateFlow()
 
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
-
     companion object {
         private const val API_CALL_INTERVAL = 15 * 60 * 1000L // 15 minutes in milliseconds
-    }
-
-    init {
-        //startBackgroundApiCall()
     }
 
     private suspend fun setNewCountryList(newList: List<CountryResponseItem>){
@@ -73,20 +63,6 @@ class CountryRepo @Inject constructor(
         } catch (e: Exception) {
             e.printStackTrace()
             loadFromDatabase() // Load from local DB in case of failure
-        }
-    }
-
-    private suspend fun startBackgroundApiCall() {
-
-        while (true) {
-
-            delay(API_CALL_INTERVAL)
-
-            try {
-                getCountryListFromApi()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
         }
     }
 }
